@@ -1,0 +1,2258 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>official breeze-next を TypeScript 化する再実行手順書</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="34b20694-c9f4-802d-b596-d6e63b909abc" class="page sans"><header><h1 class="page-title" dir="auto">official breeze-next を TypeScript 化する再実行手順書</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80ab-97c8-c503a33cf65e" class="">GitHub Repository URL: <a href="https://github.com/toshio-nakayama/breeze-next-typescript-starter">https://github.com/toshio-nakayama/breeze-next-typescript-starter</a></p></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80c4-8cb1-f837dccf2263" class="">対象ディレクトリ:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="34b20694-c9f4-8033-ba33-d122509b83cf" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">~/projects/demo/frontend</code></pre></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-8063-9918-eed8c682d8a9" class="">前提:</p></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8021-8aa0-c692057677bc" class="bulleted-list"><li style="list-style-type:disc">すでに official breeze-next を clone 済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-80da-826f-d82c70b8be52" class="bulleted-list"><li style="list-style-type:disc"><code>npm install</code> 済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8049-b2f7-c900e0599f7d" class="bulleted-list"><li style="list-style-type:disc"><code>npm run dev</code> が JS 版で動く状態</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8029-bc74-f6d303d3b612" class="bulleted-list"><li style="list-style-type:disc">作業ブランチで実施する</li></ul></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-808f-aa80-fa42402220ee" class="">0. 作業ブランチへ移動</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8002-ab5a-d9ddaf5b588b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+git checkout feature/convert-breeze-next-to-typescript</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80ea-8d5e-e46259487d44" class="">1. TypeScript 依存を追加</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80fc-b1b4-ec9ac72b3871" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+npm install -D typescript @types/node @types/react@18 @types/react-dom@18</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8030-8d43-e5628009d473" class="">2. <code>tsconfig.json</code> を作成</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-807d-974e-ff0a97797d2a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; tsconfig.json &lt;&lt;&#x27;EOF&#x27;
+{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2017&quot;,
+    &quot;lib&quot;: [&quot;dom&quot;, &quot;dom.iterable&quot;, &quot;esnext&quot;],
+    &quot;allowJs&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;strict&quot;: false,
+    &quot;noEmit&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;module&quot;: &quot;esnext&quot;,
+    &quot;moduleResolution&quot;: &quot;bundler&quot;,
+    &quot;resolveJsonModule&quot;: true,
+    &quot;isolatedModules&quot;: true,
+    &quot;jsx&quot;: &quot;preserve&quot;,
+    &quot;incremental&quot;: true,
+    &quot;paths&quot;: {
+      &quot;@/*&quot;: [&quot;./src/*&quot;]
+    },
+    &quot;plugins&quot;: [
+      {
+        &quot;name&quot;: &quot;next&quot;
+      }
+    ]
+  },
+  &quot;include&quot;: [
+    &quot;next-env.d.ts&quot;,
+    &quot;**/*.d.ts&quot;,
+    &quot;**/*.ts&quot;,
+    &quot;**/*.tsx&quot;,
+    &quot;**/*.js&quot;,
+    &quot;**/*.jsx&quot;,
+    &quot;.next/types/**/*.ts&quot;
+  ],
+  &quot;exclude&quot;: [&quot;node_modules&quot;]
+}
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80fe-81d1-dadc22ddb13f" class="">3. <code>.gitignore</code> に TypeScript ビルド情報を追加</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8065-9c5c-d1b3ecb19e3c" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+printf &#x27;\n# TypeScript\n*.tsbuildinfo\n&#x27; &gt;&gt; .gitignore</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8043-9345-fb35a3822a64" class="">4. 型定義ディレクトリを作成</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c4-97d2-eb515397cb8a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mkdir -p src/types</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8003-b38f-d4ff292538c5" class="">5. 共通型ファイルを作成</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b6-8ea7-fc20b5412747" class=""><code>src/types/index.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80d9-81b2-e87817dbeca5" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/types/index.ts &lt;&lt;&#x27;EOF&#x27;
+export type User = {
+    id: number
+    name: string
+    email: string
+    email_verified_at?: string | null
+    created_at?: string
+    updated_at?: string
+}
+
+export type ValidationErrors = Record&lt;string, string[]&gt;
+
+export type AuthMiddleware = &#x27;auth&#x27; | &#x27;guest&#x27; | undefined
+
+export type UseAuthOptions = {
+    middleware?: AuthMiddleware
+    redirectIfAuthenticated?: string
+}
+
+export type RegisterParams = {
+    name: string
+    email: string
+    password: string
+    password_confirmation: string
+    setErrors: (errors: ValidationErrors) =&gt; void
+}
+
+export type LoginParams = {
+    email: string
+    password: string
+    remember: boolean
+    setErrors: (errors: ValidationErrors) =&gt; void
+    setStatus: (status: string | null) =&gt; void
+}
+
+export type ForgotPasswordParams = {
+    email: string
+    setErrors: (errors: ValidationErrors) =&gt; void
+    setStatus: (status: string | null) =&gt; void
+}
+
+export type ResetPasswordParams = {
+    email: string
+    password: string
+    password_confirmation: string
+    setErrors: (errors: ValidationErrors) =&gt; void
+    setStatus: (status: string | null) =&gt; void
+}
+
+export type ResendEmailVerificationParams = {
+    setStatus: (status: string | null) =&gt; void
+}
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-805b-b9cb-f9d40fb0909c" class=""><code>src/types/global.d.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8082-8918-cf2d1f620dc7" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/types/global.d.ts &lt;&lt;&#x27;EOF&#x27;
+declare module &#x27;*.css&#x27;
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-805b-a8b0-f19ae5c2e269" class="">6. <code>axios</code> と <code>auth</code> を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8061-8acf-f3870468f4ad" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-808c-a792-f3f6c8c202e4" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv src/lib/axios.js src/lib/axios.ts
+mv src/hooks/auth.js src/hooks/auth.ts</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80e7-87fd-cc307a6dc397" class=""><code>src/lib/axios.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8062-b245-e47d98b4d317" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/lib/axios.ts &lt;&lt;&#x27;EOF&#x27;
+import Axios from &#x27;axios&#x27;
+
+const axios = Axios.create({
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    headers: {
+        &#x27;X-Requested-With&#x27;: &#x27;XMLHttpRequest&#x27;,
+    },
+    withCredentials: true,
+})
+
+export default axios
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-802f-b835-fcb2e4d856ff" class=""><code>src/hooks/auth.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8038-892d-f1f534cd7e09" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/hooks/auth.ts &lt;&lt;&#x27;EOF&#x27;
+import useSWR from &#x27;swr&#x27;
+import axios from &#x27;@/lib/axios&#x27;
+import { useEffect } from &#x27;react&#x27;
+import { useParams, useRouter } from &#x27;next/navigation&#x27;
+import type {
+    ForgotPasswordParams,
+    LoginParams,
+    RegisterParams,
+    ResetPasswordParams,
+    ResendEmailVerificationParams,
+    UseAuthOptions,
+    User,
+} from &#x27;@/types&#x27;
+
+export const useAuth = ({
+    middleware,
+    redirectIfAuthenticated,
+}: UseAuthOptions = {}) =&gt; {
+    const router = useRouter()
+    const params = useParams()
+
+    const { data: user, error, mutate } = useSWR&lt;User&gt;(&#x27;/api/user&#x27;, () =&gt;
+        axios
+            .get(&#x27;/api/user&#x27;)
+            .then(res =&gt; res.data)
+            .catch(error =&gt; {
+                if (error.response.status !== 409) throw error
+
+                router.push(&#x27;/verify-email&#x27;)
+            }),
+    )
+
+    const csrf = () =&gt; axios.get(&#x27;/sanctum/csrf-cookie&#x27;)
+
+    const register = async ({ setErrors, ...props }: RegisterParams) =&gt; {
+        await csrf()
+
+        setErrors({})
+
+        axios
+            .post(&#x27;/register&#x27;, props)
+            .then(() =&gt; mutate())
+            .catch(error =&gt; {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const login = async ({ setErrors, setStatus, ...props }: LoginParams) =&gt; {
+        await csrf()
+
+        setErrors({})
+        setStatus(null)
+
+        axios
+            .post(&#x27;/login&#x27;, props)
+            .then(() =&gt; mutate())
+            .catch(error =&gt; {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const forgotPassword = async ({
+        setErrors,
+        setStatus,
+        email,
+    }: ForgotPasswordParams) =&gt; {
+        await csrf()
+
+        setErrors({})
+        setStatus(null)
+
+        axios
+            .post(&#x27;/forgot-password&#x27;, { email })
+            .then(response =&gt; setStatus(response.data.status))
+            .catch(error =&gt; {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const resetPassword = async ({
+        setErrors,
+        setStatus,
+        ...props
+    }: ResetPasswordParams) =&gt; {
+        await csrf()
+
+        setErrors({})
+        setStatus(null)
+
+        axios
+            .post(&#x27;/reset-password&#x27;, { token: params.token, ...props })
+            .then(response =&gt;
+                router.push(&#x27;/login?reset=&#x27; + btoa(response.data.status)),
+            )
+            .catch(error =&gt; {
+                if (error.response.status !== 422) throw error
+
+                setErrors(error.response.data.errors)
+            })
+    }
+
+    const resendEmailVerification = ({
+        setStatus,
+    }: ResendEmailVerificationParams) =&gt; {
+        axios
+            .post(&#x27;/email/verification-notification&#x27;)
+            .then(response =&gt; setStatus(response.data.status))
+    }
+
+    const logout = async () =&gt; {
+        if (!error) {
+            await axios.post(&#x27;/logout&#x27;).then(() =&gt; mutate())
+        }
+
+        window.location.pathname = &#x27;/login&#x27;
+    }
+
+    useEffect(() =&gt; {
+        if (middleware === &#x27;guest&#x27; &amp;&amp; redirectIfAuthenticated &amp;&amp; user) {
+            router.push(redirectIfAuthenticated)
+        }
+
+        if (middleware === &#x27;auth&#x27; &amp;&amp; user &amp;&amp; !user.email_verified_at) {
+            router.push(&#x27;/verify-email&#x27;)
+        }
+
+        if (
+            window.location.pathname === &#x27;/verify-email&#x27; &amp;&amp;
+            user?.email_verified_at
+        ) {
+            router.push(redirectIfAuthenticated ?? &#x27;/&#x27;)
+        }
+
+        if (middleware === &#x27;auth&#x27; &amp;&amp; error) {
+            logout()
+        }
+    }, [user, error])
+
+    return {
+        user,
+        register,
+        login,
+        forgotPassword,
+        resetPassword,
+        resendEmailVerification,
+        logout,
+    }
+}
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-809e-ac2b-c6dbfb3514d2" class="">7. <code>src/app</code> ルートを TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ab-b715-c317ea13c704" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8066-bfd8-f70e43438fad" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv src/app/layout.js src/app/layout.tsx
+mv src/app/page.js src/app/page.tsx
+mv src/app/not-found.js src/app/not-found.tsx
+mv src/app/LoginLinks.js src/app/LoginLinks.tsx</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8082-827a-ceacf41fc06d" class=""><code>src/app/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8073-840a-f55aebf46690" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/app/layout.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { Metadata } from &#x27;next&#x27;
+import type { ReactNode } from &#x27;react&#x27;
+import { Nunito } from &#x27;next/font/google&#x27;
+import &#x27;@/app/global.css&#x27;
+
+const nunitoFont = Nunito({
+    subsets: [&#x27;latin&#x27;],
+    display: &#x27;swap&#x27;,
+})
+
+type RootLayoutProps = {
+    children: ReactNode
+}
+
+export const metadata: Metadata = {
+    title: &#x27;Laravel&#x27;,
+}
+
+const RootLayout = ({ children }: RootLayoutProps) =&gt; {
+    return (
+        &lt;html lang=&quot;en&quot; className={nunitoFont.className}&gt;
+            &lt;body className=&quot;antialiased&quot;&gt;{children}&lt;/body&gt;
+        &lt;/html&gt;
+    )
+}
+
+export default RootLayout
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80c4-8774-d1b9325a7d11" class=""><code>src/app/page.tsx</code> の先頭置換</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8022-98b4-fc2b4258d51a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+python3 - &lt;&lt;&#x27;PY&#x27;
+from pathlib import Path
+
+path = Path(&quot;src/app/page.tsx&quot;)
+text = path.read_text()
+
+old = &quot;&quot;&quot;import LoginLinks from &#x27;@/app/LoginLinks&#x27;
+
+export const metadata = {
+    title: &#x27;Laravel&#x27;,
+}
+&quot;&quot;&quot;
+
+new = &quot;&quot;&quot;import type { Metadata } from &#x27;next&#x27;
+import LoginLinks from &#x27;@/app/LoginLinks&#x27;
+
+export const metadata: Metadata = {
+    title: &#x27;Laravel&#x27;,
+}
+&quot;&quot;&quot;
+
+if old not in text:
+    raise SystemExit(&quot;置換対象が見つからなかった&quot;)
+path.write_text(text.replace(old, new, 1))
+print(&quot;updated:&quot;, path)
+PY</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80af-8f8d-fcd5d3eb773a" class=""><code>src/app/not-found.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c9-b625-fe04e7d78d22" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/app/not-found.tsx &lt;&lt;&#x27;EOF&#x27;
+const NotFoundPage = () =&gt; {
+    return (
+        &lt;div className=&quot;relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0&quot;&gt;
+            &lt;div className=&quot;max-w-xl mx-auto sm:px-6 lg:px-8&quot;&gt;
+                &lt;div className=&quot;flex items-center pt-8 sm:justify-start sm:pt-0&quot;&gt;
+                    &lt;div className=&quot;px-4 text-lg text-gray-500 border-r border-gray-400 tracking-wider&quot;&gt;
+                        404
+                    &lt;/div&gt;
+
+                    &lt;div className=&quot;ml-4 text-lg text-gray-500 uppercase tracking-wider&quot;&gt;
+                        Not Found
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    )
+}
+
+export default NotFoundPage
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ff-b4c2-e2e10b88af51" class=""><code>src/app/LoginLinks.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-801d-87ee-c127f469bc10" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/app/LoginLinks.tsx &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import Link from &#x27;next/link&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+
+const LoginLinks = () =&gt; {
+    const { user } = useAuth({ middleware: &#x27;guest&#x27; })
+
+    return (
+        &lt;div className=&quot;hidden fixed top-0 right-0 px-6 py-4 sm:block&quot;&gt;
+            {user ? (
+                &lt;Link
+                    href=&quot;/dashboard&quot;
+                    className=&quot;ml-4 text-sm text-gray-700 underline&quot;
+                &gt;
+                    Dashboard
+                &lt;/Link&gt;
+            ) : (
+                &lt;&gt;
+                    &lt;Link
+                        href=&quot;/login&quot;
+                        className=&quot;text-sm text-gray-700 underline&quot;
+                    &gt;
+                        Login
+                    &lt;/Link&gt;
+
+                    &lt;Link
+                        href=&quot;/register&quot;
+                        className=&quot;ml-4 text-sm text-gray-700 underline&quot;
+                    &gt;
+                        Register
+                    &lt;/Link&gt;
+                &lt;/&gt;
+            )}
+        &lt;/div&gt;
+    )
+}
+
+export default LoginLinks
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8068-82f2-eb365ce04bd9" class="">8. <code>src/components</code> を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80e3-9bc0-cba98109db4b" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80f8-b92f-f41be915dac0" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv src/components/ApplicationLogo.js src/components/ApplicationLogo.tsx
+mv src/components/Button.js src/components/Button.tsx
+mv src/components/Input.js src/components/Input.tsx
+mv src/components/Label.js src/components/Label.tsx
+mv src/components/InputError.js src/components/InputError.tsx
+mv src/components/Dropdown.js src/components/Dropdown.tsx
+mv src/components/DropdownLink.js src/components/DropdownLink.tsx
+mv src/components/NavLink.js src/components/NavLink.tsx
+mv src/components/ResponsiveNavLink.js src/components/ResponsiveNavLink.tsx</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803a-b431-fe61f7c98703" class=""><code>ApplicationLogo.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-805b-a2a8-e0d34244995b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/ApplicationLogo.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { SVGProps } from &#x27;react&#x27;
+
+const ApplicationLogo = (props: SVGProps&lt;SVGSVGElement&gt;) =&gt; (
+    &lt;svg viewBox=&quot;0 0 316 316&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; {...props}&gt;
+        &lt;path d=&quot;M305.8 81.125C305.77 80.995 305.69 80.885 305.65 80.755C305.56 80.525 305.49 80.285 305.37 80.075C305.29 79.935 305.17 79.815 305.07 79.685C304.94 79.515 304.83 79.325 304.68 79.175C304.55 79.045 304.39 78.955 304.25 78.845C304.09 78.715 303.95 78.575 303.77 78.475L251.32 48.275C249.97 47.495 248.31 47.495 246.96 48.275L194.51 78.475C194.33 78.575 194.19 78.725 194.03 78.845C193.89 78.955 193.73 79.045 193.6 79.175C193.45 79.325 193.34 79.515 193.21 79.685C193.11 79.815 192.99 79.935 192.91 80.075C192.79 80.285 192.71 80.525 192.63 80.755C192.58 80.875 192.51 80.995 192.48 81.125C192.38 81.495 192.33 81.875 192.33 82.265V139.625L148.62 164.795V52.575C148.62 52.185 148.57 51.805 148.47 51.435C148.44 51.305 148.36 51.195 148.32 51.065C148.23 50.835 148.16 50.595 148.04 50.385C147.96 50.245 147.84 50.125 147.74 49.995C147.61 49.825 147.5 49.635 147.35 49.485C147.22 49.355 147.06 49.265 146.92 49.155C146.76 49.025 146.62 48.885 146.44 48.785L93.99 18.585C92.64 17.805 90.98 17.805 89.63 18.585L37.18 48.785C37 48.885 36.86 49.035 36.7 49.155C36.56 49.265 36.4 49.355 36.27 49.485C36.12 49.635 36.01 49.825 35.88 49.995C35.78 50.125 35.66 50.245 35.58 50.385C35.46 50.595 35.38 50.835 35.3 51.065C35.25 51.185 35.18 51.305 35.15 51.435C35.05 51.805 35 52.185 35 52.575V232.235C35 233.795 35.84 235.245 37.19 236.025L142.1 296.425C142.33 296.555 142.58 296.635 142.82 296.725C142.93 296.765 143.04 296.835 143.16 296.865C143.53 296.965 143.9 297.015 144.28 297.015C144.66 297.015 145.03 296.965 145.4 296.865C145.5 296.835 145.59 296.775 145.69 296.745C145.95 296.655 146.21 296.565 146.45 296.435L251.36 236.035C252.72 235.255 253.55 233.815 253.55 232.245V174.885L303.81 145.945C305.17 145.165 306 143.725 306 142.155V82.265C305.95 81.875 305.89 81.495 305.8 81.125ZM144.2 227.205L100.57 202.515L146.39 176.135L196.66 147.195L240.33 172.335L208.29 190.625L144.2 227.205ZM244.75 114.995V164.795L226.39 154.225L201.03 139.625V89.825L219.39 100.395L244.75 114.995ZM249.12 57.105L292.81 82.265L249.12 107.425L205.43 82.265L249.12 57.105ZM114.49 184.425L96.13 194.995V85.305L121.49 70.705L139.85 60.135V169.815L114.49 184.425ZM91.76 27.425L135.45 52.585L91.76 77.745L48.07 52.585L91.76 27.425ZM43.67 60.135L62.03 70.705L87.39 85.305V202.545V202.555V202.565C87.39 202.735 87.44 202.895 87.46 203.055C87.49 203.265 87.49 203.485 87.55 203.695V203.705C87.6 203.875 87.69 204.035 87.76 204.195C87.84 204.375 87.89 204.575 87.99 204.745C87.99 204.745 87.99 204.755 88 204.755C88.09 204.905 88.22 205.035 88.33 205.175C88.45 205.335 88.55 205.495 88.69 205.635L88.7 205.645C88.82 205.765 88.98 205.855 89.12 205.965C89.28 206.085 89.42 206.225 89.59 206.325C89.6 206.325 89.6 206.325 89.61 206.335C89.62 206.335 89.62 206.345 89.63 206.345L139.87 234.775V285.065L43.67 229.705V60.135ZM244.75 229.705L148.58 285.075V234.775L219.8 194.115L244.75 179.875V229.705ZM297.2 139.625L253.49 164.795V114.995L278.85 100.395L297.21 89.825V139.625H297.2Z&quot; /&gt;
+    &lt;/svg&gt;
+)
+
+export default ApplicationLogo
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b3-be6c-e83c025067e2" class=""><code>Button.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c8-8176-dacef4bd801d" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/Button.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { ButtonHTMLAttributes } from &#x27;react&#x27;
+
+type ButtonProps = ButtonHTMLAttributes&lt;HTMLButtonElement&gt;
+
+const Button = ({ type = &#x27;submit&#x27;, className = &#x27;&#x27;, ...props }: ButtonProps) =&gt; (
+    &lt;button
+        type={type}
+        className={`${className} inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150`}
+        {...props}
+    /&gt;
+)
+
+export default Button
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8083-bce3-c5e43ceee9b5" class=""><code>Input.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8025-a2a2-fbc15c268397" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/Input.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { InputHTMLAttributes } from &#x27;react&#x27;
+
+type InputProps = InputHTMLAttributes&lt;HTMLInputElement&gt;
+
+const Input = ({ disabled = false, className = &#x27;&#x27;, ...props }: InputProps) =&gt; (
+    &lt;input
+        disabled={disabled}
+        className={`${className} rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50`}
+        {...props}
+    /&gt;
+)
+
+export default Input
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8077-9934-c55464caa603" class=""><code>Label.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8028-bf53-c46572b0ca10" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/Label.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { LabelHTMLAttributes, ReactNode } from &#x27;react&#x27;
+
+type LabelProps = LabelHTMLAttributes&lt;HTMLLabelElement&gt; &amp; {
+    children?: ReactNode
+}
+
+const Label = ({ className = &#x27;&#x27;, children, ...props }: LabelProps) =&gt; (
+    &lt;label
+        className={`${className} block font-medium text-sm text-gray-700`}
+        {...props}&gt;
+        {children}
+    &lt;/label&gt;
+)
+
+export default Label
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8097-ae9c-ed54a88be332" class=""><code>InputError.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80a7-bfff-f2271cd5db51" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/InputError.tsx &lt;&lt;&#x27;EOF&#x27;
+type InputErrorProps = {
+    messages?: string[]
+    className?: string
+}
+
+const InputError = ({ messages = [], className = &#x27;&#x27; }: InputErrorProps) =&gt; (
+    &lt;&gt;
+        {messages.length &gt; 0 &amp;&amp; (
+            &lt;&gt;
+                {messages.map((message, index) =&gt; (
+                    &lt;p
+                        className={`${className} text-sm text-red-600`}
+                        key={index}&gt;
+                        {message}
+                    &lt;/p&gt;
+                ))}
+            &lt;/&gt;
+        )}
+    &lt;/&gt;
+)
+
+export default InputError
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80fc-812e-c8a3896e402a" class=""><code>Dropdown.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-800a-9866-f917e40ebb2a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/Dropdown.tsx &lt;&lt;&#x27;EOF&#x27;
+import React from &#x27;react&#x27;
+import type { ReactNode } from &#x27;react&#x27;
+import { Menu, Transition } from &#x27;@headlessui/react&#x27;
+
+type DropdownProps = {
+    align?: &#x27;left&#x27; | &#x27;right&#x27; | &#x27;top&#x27;
+    width?: number | &#x27;48&#x27;
+    contentClasses?: string
+    trigger: ReactNode
+    children: ReactNode
+}
+
+const Dropdown = ({
+    align = &#x27;right&#x27;,
+    width = 48,
+    contentClasses = &#x27;py-1 bg-white&#x27;,
+    trigger,
+    children,
+}: DropdownProps) =&gt; {
+    let alignmentClasses: string
+    let widthClass: string = &#x27;&#x27;
+
+    switch (String(width)) {
+        case &#x27;48&#x27;:
+            widthClass = &#x27;w-48&#x27;
+            break
+        default:
+            widthClass = `w-${width}`
+            break
+    }
+
+    switch (align) {
+        case &#x27;left&#x27;:
+            alignmentClasses = &#x27;origin-top-left left-0&#x27;
+            break
+        case &#x27;top&#x27;:
+            alignmentClasses = &#x27;origin-top&#x27;
+            break
+        case &#x27;right&#x27;:
+        default:
+            alignmentClasses = &#x27;origin-top-right right-0&#x27;
+            break
+    }
+
+    return (
+        &lt;Menu as=&quot;div&quot; className=&quot;relative&quot;&gt;
+            {({ open }) =&gt; (
+                &lt;&gt;
+                    &lt;Menu.Button as={React.Fragment}&gt;{trigger}&lt;/Menu.Button&gt;
+
+                    &lt;Transition
+                        show={open}
+                        enter=&quot;transition ease-out duration-200&quot;
+                        enterFrom=&quot;transform opacity-0 scale-95&quot;
+                        enterTo=&quot;transform opacity-100 scale-100&quot;
+                        leave=&quot;transition ease-in duration-75&quot;
+                        leaveFrom=&quot;transform opacity-100 scale-100&quot;
+                        leaveTo=&quot;transform opacity-0 scale-95&quot;&gt;
+                        &lt;div
+                            className={`absolute z-50 mt-2 ${widthClass} rounded-md shadow-lg ${alignmentClasses}`}&gt;
+                            &lt;Menu.Items
+                                className={`rounded-md focus:outline-none ring-1 ring-black ring-opacity-5 ${contentClasses}`}
+                                static&gt;
+                                {children}
+                            &lt;/Menu.Items&gt;
+                        &lt;/div&gt;
+                    &lt;/Transition&gt;
+                &lt;/&gt;
+            )}
+        &lt;/Menu&gt;
+    )
+}
+
+export default Dropdown
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8004-837d-c8d4b1065017" class=""><code>DropdownLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8013-bb3e-c478c49e2e8b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/DropdownLink.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { ButtonHTMLAttributes, ReactNode } from &#x27;react&#x27;
+import Link from &#x27;next/link&#x27;
+import type { LinkProps } from &#x27;next/link&#x27;
+import { Menu } from &#x27;@headlessui/react&#x27;
+
+type DropdownLinkProps = LinkProps &amp; {
+    children?: ReactNode
+    className?: string
+}
+
+const DropdownLink = ({ children, className = &#x27;&#x27;, ...props }: DropdownLinkProps) =&gt; (
+    &lt;Menu.Item&gt;
+        {({ active }) =&gt; (
+            &lt;Link
+                {...props}
+                className={`w-full text-left block px-4 py-2 text-sm leading-5 text-gray-700 ${
+                    active ? &#x27;bg-gray-100&#x27; : &#x27;&#x27;
+                } ${className} focus:outline-none transition duration-150 ease-in-out`}&gt;
+                {children}
+            &lt;/Link&gt;
+        )}
+    &lt;/Menu.Item&gt;
+)
+
+type DropdownButtonProps = ButtonHTMLAttributes&lt;HTMLButtonElement&gt; &amp; {
+    children?: ReactNode
+}
+
+export const DropdownButton = ({
+    children,
+    className = &#x27;&#x27;,
+    ...props
+}: DropdownButtonProps) =&gt; (
+    &lt;Menu.Item&gt;
+        {({ active }) =&gt; (
+            &lt;button
+                className={`w-full text-left block px-4 py-2 text-sm leading-5 text-gray-700 ${
+                    active ? &#x27;bg-gray-100&#x27; : &#x27;&#x27;
+                } ${className} focus:outline-none transition duration-150 ease-in-out`}
+                {...props}&gt;
+                {children}
+            &lt;/button&gt;
+        )}
+    &lt;/Menu.Item&gt;
+)
+
+export default DropdownLink
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8099-8b7f-eaf1519efe4c" class=""><code>NavLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c7-9b54-f2d008389c7b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/NavLink.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { ReactNode } from &#x27;react&#x27;
+import Link from &#x27;next/link&#x27;
+import type { LinkProps } from &#x27;next/link&#x27;
+
+type NavLinkProps = LinkProps &amp; {
+    active?: boolean
+    children?: ReactNode
+    className?: string
+}
+
+const NavLink = ({
+    active = false,
+    children,
+    className = &#x27;&#x27;,
+    ...props
+}: NavLinkProps) =&gt; (
+    &lt;Link
+        {...props}
+        className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out ${
+            active
+                ? &#x27;border-indigo-400 text-gray-900 focus:border-indigo-700&#x27;
+                : &#x27;border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300&#x27;
+        } ${className}`}&gt;
+        {children}
+    &lt;/Link&gt;
+)
+
+export default NavLink
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ec-9d3f-f28ee0910387" class=""><code>ResponsiveNavLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8080-825e-e8c5eaca27d6" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; src/components/ResponsiveNavLink.tsx &lt;&lt;&#x27;EOF&#x27;
+import type { ButtonHTMLAttributes, ReactNode } from &#x27;react&#x27;
+import Link from &#x27;next/link&#x27;
+import type { LinkProps } from &#x27;next/link&#x27;
+
+type ResponsiveNavLinkProps = LinkProps &amp; {
+    active?: boolean
+    children?: ReactNode
+    className?: string
+}
+
+const ResponsiveNavLink = ({
+    active = false,
+    children,
+    className = &#x27;&#x27;,
+    ...props
+}: ResponsiveNavLinkProps) =&gt; (
+    &lt;Link
+        {...props}
+        className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium leading-5 focus:outline-none transition duration-150 ease-in-out ${
+            active
+                ? &#x27;border-indigo-400 text-indigo-700 bg-indigo-50 focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700&#x27;
+                : &#x27;border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300&#x27;
+        } ${className}`}&gt;
+        {children}
+    &lt;/Link&gt;
+)
+
+type ResponsiveNavButtonProps = ButtonHTMLAttributes&lt;HTMLButtonElement&gt; &amp; {
+    children?: ReactNode
+}
+
+export const ResponsiveNavButton = ({
+    className = &#x27;&#x27;,
+    ...props
+}: ResponsiveNavButtonProps) =&gt; (
+    &lt;button
+        className={`block w-full pl-3 pr-4 py-2 border-l-4 text-left text-base font-medium leading-5 focus:outline-none transition duration-150 ease-in-out border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 ${className}`}
+        {...props}
+    /&gt;
+)
+
+export default ResponsiveNavLink
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8032-828e-ea5e92ff095f" class="">9. <code>(auth)</code> 配下を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80aa-b90c-f648a2bbd519" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8061-a927-f9e8fe08d8e3" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv &#x27;src/app/(auth)/AuthCard.js&#x27; &#x27;src/app/(auth)/AuthCard.tsx&#x27;
+mv &#x27;src/app/(auth)/AuthSessionStatus.js&#x27; &#x27;src/app/(auth)/AuthSessionStatus.tsx&#x27;
+mv &#x27;src/app/(auth)/layout.js&#x27; &#x27;src/app/(auth)/layout.tsx&#x27;
+mv &#x27;src/app/(auth)/login/page.js&#x27; &#x27;src/app/(auth)/login/page.tsx&#x27;
+mv &#x27;src/app/(auth)/register/page.js&#x27; &#x27;src/app/(auth)/register/page.tsx&#x27;
+mv &#x27;src/app/(auth)/forgot-password/page.js&#x27; &#x27;src/app/(auth)/forgot-password/page.tsx&#x27;
+mv &#x27;src/app/(auth)/password-reset/[token]/page.js&#x27; &#x27;src/app/(auth)/password-reset/[token]/page.tsx&#x27;
+mv &#x27;src/app/(auth)/verify-email/page.js&#x27; &#x27;src/app/(auth)/verify-email/page.tsx&#x27;</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803d-85cb-c5ff2a4693f3" class=""><code>AuthCard.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8070-a349-e5f923383183" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/AuthCard.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+import type { ReactNode } from &#x27;react&#x27;
+
+type AuthCardProps = {
+    logo?: ReactNode
+    children?: ReactNode
+}
+
+const AuthCard = ({ logo, children }: AuthCardProps) =&gt; (
+    &lt;div className=&quot;min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100&quot;&gt;
+        &lt;div&gt;{logo}&lt;/div&gt;
+
+        &lt;div className=&quot;w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg&quot;&gt;
+            {children}
+        &lt;/div&gt;
+    &lt;/div&gt;
+)
+
+export default AuthCard
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8065-97c3-eb3d6db153bf" class=""><code>AuthSessionStatus.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8081-9b83-e5bff1af7ba8" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/AuthSessionStatus.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+import type { HTMLAttributes } from &#x27;react&#x27;
+
+type AuthSessionStatusProps = HTMLAttributes&lt;HTMLDivElement&gt; &amp; {
+    status?: string | null
+    className?: string
+}
+
+const AuthSessionStatus = ({
+    status,
+    className = &#x27;&#x27;,
+    ...props
+}: AuthSessionStatusProps) =&gt; (
+    &lt;&gt;
+        {status &amp;&amp; (
+            &lt;div
+                className={`${className} font-medium text-sm text-green-600`}
+                {...props}&gt;
+                {status}
+            &lt;/div&gt;
+        )}
+    &lt;/&gt;
+)
+
+export default AuthSessionStatus
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8051-a262-f022e2483a68" class=""><code>(auth)/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80a1-a71e-cc0dc0e3bf29" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/layout.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+import type { Metadata } from &#x27;next&#x27;
+import type { ReactNode } from &#x27;react&#x27;
+import Link from &#x27;next/link&#x27;
+import AuthCard from &#x27;@/app/(auth)/AuthCard&#x27;
+import ApplicationLogo from &#x27;@/components/ApplicationLogo&#x27;
+
+type AuthLayoutProps = {
+    children?: ReactNode
+}
+
+export const metadata: Metadata = {
+    title: &#x27;Laravel&#x27;,
+}
+
+const Layout = ({ children }: AuthLayoutProps) =&gt; {
+    return (
+        &lt;div&gt;
+            &lt;div className=&quot;text-gray-900 antialiased&quot;&gt;
+                &lt;AuthCard
+                    logo={
+                        &lt;Link href=&quot;/&quot;&gt;
+                            &lt;ApplicationLogo className=&quot;w-20 h-20 fill-current text-gray-500&quot; /&gt;
+                        &lt;/Link&gt;
+                    }&gt;
+                    {children}
+                &lt;/AuthCard&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    )
+}
+
+export default Layout
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8092-ad73-f070abb4b8ed" class=""><code>(auth)/login/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-802c-9260-c33fffbb55c4" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/login/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import type { ChangeEvent, FormEvent } from &#x27;react&#x27;
+import { useEffect, useState } from &#x27;react&#x27;
+import Link from &#x27;next/link&#x27;
+import { useSearchParams } from &#x27;next/navigation&#x27;
+import AuthSessionStatus from &#x27;@/app/(auth)/AuthSessionStatus&#x27;
+import Button from &#x27;@/components/Button&#x27;
+import Input from &#x27;@/components/Input&#x27;
+import InputError from &#x27;@/components/InputError&#x27;
+import Label from &#x27;@/components/Label&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+import type { ValidationErrors } from &#x27;@/types&#x27;
+
+const Login = () =&gt; {
+    const searchParams = useSearchParams()
+
+    const { login } = useAuth({
+        middleware: &#x27;guest&#x27;,
+        redirectIfAuthenticated: &#x27;/dashboard&#x27;,
+    })
+
+    const [email, setEmail] = useState(&#x27;&#x27;)
+    const [password, setPassword] = useState(&#x27;&#x27;)
+    const [shouldRemember, setShouldRemember] = useState(false)
+    const [errors, setErrors] = useState&lt;ValidationErrors&gt;({})
+    const [status, setStatus] = useState&lt;string | null&gt;(null)
+
+    useEffect(() =&gt; {
+        const reset = searchParams.get(&#x27;reset&#x27;)
+
+        if (reset &amp;&amp; Object.keys(errors).length === 0) {
+            setStatus(atob(reset))
+        } else {
+            setStatus(null)
+        }
+    }, [searchParams, errors])
+
+    const submitForm = async (event: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+        event.preventDefault()
+
+        login({
+            email,
+            password,
+            remember: shouldRemember,
+            setErrors,
+            setStatus,
+        })
+    }
+
+    return (
+        &lt;&gt;
+            &lt;AuthSessionStatus className=&quot;mb-4&quot; status={status} /&gt;
+
+            &lt;form onSubmit={submitForm}&gt;
+                &lt;div&gt;
+                    &lt;Label htmlFor=&quot;email&quot;&gt;Email&lt;/Label&gt;
+
+                    &lt;Input
+                        id=&quot;email&quot;
+                        type=&quot;email&quot;
+                        value={email}
+                        className=&quot;block mt-1 w-full&quot;
+                        onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                            setEmail(event.target.value)
+                        }
+                        required
+                        autoFocus
+                    /&gt;
+
+                    &lt;InputError messages={errors.email} className=&quot;mt-2&quot; /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;mt-4&quot;&gt;
+                    &lt;Label htmlFor=&quot;password&quot;&gt;Password&lt;/Label&gt;
+
+                    &lt;Input
+                        id=&quot;password&quot;
+                        type=&quot;password&quot;
+                        value={password}
+                        className=&quot;block mt-1 w-full&quot;
+                        onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                            setPassword(event.target.value)
+                        }
+                        required
+                        autoComplete=&quot;current-password&quot;
+                    /&gt;
+
+                    &lt;InputError
+                        messages={errors.password}
+                        className=&quot;mt-2&quot;
+                    /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;block mt-4&quot;&gt;
+                    &lt;label
+                        htmlFor=&quot;remember_me&quot;
+                        className=&quot;inline-flex items-center&quot;&gt;
+                        &lt;input
+                            id=&quot;remember_me&quot;
+                            type=&quot;checkbox&quot;
+                            name=&quot;remember&quot;
+                            className=&quot;rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50&quot;
+                            onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                                setShouldRemember(event.target.checked)
+                            }
+                        /&gt;
+
+                        &lt;span className=&quot;ml-2 text-sm text-gray-600&quot;&gt;
+                            Remember me
+                        &lt;/span&gt;
+                    &lt;/label&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;flex items-center justify-end mt-4&quot;&gt;
+                    &lt;Link
+                        href=&quot;/forgot-password&quot;
+                        className=&quot;underline text-sm text-gray-600 hover:text-gray-900&quot;&gt;
+                        Forgot your password?
+                    &lt;/Link&gt;
+
+                    &lt;Button className=&quot;ml-3&quot;&gt;Login&lt;/Button&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+        &lt;/&gt;
+    )
+}
+
+export default Login
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80bd-8728-f97a4d07f9a2" class=""><code>(auth)/register/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8031-851c-dafd0d37d9ff" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/register/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import type { ChangeEvent, FormEvent } from &#x27;react&#x27;
+import { useState } from &#x27;react&#x27;
+import Link from &#x27;next/link&#x27;
+import Button from &#x27;@/components/Button&#x27;
+import Input from &#x27;@/components/Input&#x27;
+import InputError from &#x27;@/components/InputError&#x27;
+import Label from &#x27;@/components/Label&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+import type { ValidationErrors } from &#x27;@/types&#x27;
+
+const Page = () =&gt; {
+    const { register } = useAuth({
+        middleware: &#x27;guest&#x27;,
+        redirectIfAuthenticated: &#x27;/dashboard&#x27;,
+    })
+
+    const [name, setName] = useState(&#x27;&#x27;)
+    const [email, setEmail] = useState(&#x27;&#x27;)
+    const [password, setPassword] = useState(&#x27;&#x27;)
+    const [passwordConfirmation, setPasswordConfirmation] = useState(&#x27;&#x27;)
+    const [errors, setErrors] = useState&lt;ValidationErrors&gt;({})
+
+    const submitForm = (event: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+        event.preventDefault()
+
+        register({
+            name,
+            email,
+            password,
+            password_confirmation: passwordConfirmation,
+            setErrors,
+        })
+    }
+
+    return (
+        &lt;form onSubmit={submitForm}&gt;
+            &lt;div&gt;
+                &lt;Label htmlFor=&quot;name&quot;&gt;Name&lt;/Label&gt;
+
+                &lt;Input
+                    id=&quot;name&quot;
+                    type=&quot;text&quot;
+                    value={name}
+                    className=&quot;block mt-1 w-full&quot;
+                    onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                        setName(event.target.value)
+                    }
+                    required
+                    autoFocus
+                /&gt;
+
+                &lt;InputError messages={errors.name} className=&quot;mt-2&quot; /&gt;
+            &lt;/div&gt;
+
+            &lt;div className=&quot;mt-4&quot;&gt;
+                &lt;Label htmlFor=&quot;email&quot;&gt;Email&lt;/Label&gt;
+
+                &lt;Input
+                    id=&quot;email&quot;
+                    type=&quot;email&quot;
+                    value={email}
+                    className=&quot;block mt-1 w-full&quot;
+                    onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                        setEmail(event.target.value)
+                    }
+                    required
+                /&gt;
+
+                &lt;InputError messages={errors.email} className=&quot;mt-2&quot; /&gt;
+            &lt;/div&gt;
+
+            &lt;div className=&quot;mt-4&quot;&gt;
+                &lt;Label htmlFor=&quot;password&quot;&gt;Password&lt;/Label&gt;
+
+                &lt;Input
+                    id=&quot;password&quot;
+                    type=&quot;password&quot;
+                    value={password}
+                    className=&quot;block mt-1 w-full&quot;
+                    onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                        setPassword(event.target.value)
+                    }
+                    required
+                    autoComplete=&quot;new-password&quot;
+                /&gt;
+
+                &lt;InputError messages={errors.password} className=&quot;mt-2&quot; /&gt;
+            &lt;/div&gt;
+
+            &lt;div className=&quot;mt-4&quot;&gt;
+                &lt;Label htmlFor=&quot;passwordConfirmation&quot;&gt;
+                    Confirm Password
+                &lt;/Label&gt;
+
+                &lt;Input
+                    id=&quot;passwordConfirmation&quot;
+                    type=&quot;password&quot;
+                    value={passwordConfirmation}
+                    className=&quot;block mt-1 w-full&quot;
+                    onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                        setPasswordConfirmation(event.target.value)
+                    }
+                    required
+                /&gt;
+
+                &lt;InputError
+                    messages={errors.password_confirmation}
+                    className=&quot;mt-2&quot;
+                /&gt;
+            &lt;/div&gt;
+
+            &lt;div className=&quot;flex items-center justify-end mt-4&quot;&gt;
+                &lt;Link
+                    href=&quot;/login&quot;
+                    className=&quot;underline text-sm text-gray-600 hover:text-gray-900&quot;&gt;
+                    Already registered?
+                &lt;/Link&gt;
+
+                &lt;Button className=&quot;ml-4&quot;&gt;Register&lt;/Button&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    )
+}
+
+export default Page
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b5-bcce-ca977dcac5f3" class=""><code>(auth)/forgot-password/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8042-8d28-f4bb726d8f87" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/forgot-password/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import type { ChangeEvent, FormEvent } from &#x27;react&#x27;
+import { useState } from &#x27;react&#x27;
+import AuthSessionStatus from &#x27;@/app/(auth)/AuthSessionStatus&#x27;
+import Button from &#x27;@/components/Button&#x27;
+import Input from &#x27;@/components/Input&#x27;
+import InputError from &#x27;@/components/InputError&#x27;
+import Label from &#x27;@/components/Label&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+import type { ValidationErrors } from &#x27;@/types&#x27;
+
+const Page = () =&gt; {
+    const { forgotPassword } = useAuth({
+        middleware: &#x27;guest&#x27;,
+        redirectIfAuthenticated: &#x27;/dashboard&#x27;,
+    })
+
+    const [email, setEmail] = useState(&#x27;&#x27;)
+    const [errors, setErrors] = useState&lt;ValidationErrors&gt;({})
+    const [status, setStatus] = useState&lt;string | null&gt;(null)
+
+    const submitForm = (event: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+        event.preventDefault()
+
+        forgotPassword({ email, setErrors, setStatus })
+    }
+
+    return (
+        &lt;&gt;
+            &lt;div className=&quot;mb-4 text-sm text-gray-600&quot;&gt;
+                Forgot your password? No problem. Just let us know your email
+                address and we will email you a password reset link that
+                will allow you to choose a new one.
+            &lt;/div&gt;
+
+            &lt;AuthSessionStatus className=&quot;mb-4&quot; status={status} /&gt;
+
+            &lt;form onSubmit={submitForm}&gt;
+                &lt;div&gt;
+                    &lt;Label htmlFor=&quot;email&quot;&gt;Email&lt;/Label&gt;
+
+                    &lt;Input
+                        id=&quot;email&quot;
+                        type=&quot;email&quot;
+                        name=&quot;email&quot;
+                        value={email}
+                        className=&quot;block mt-1 w-full&quot;
+                        onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                            setEmail(event.target.value)
+                        }
+                        required
+                        autoFocus
+                    /&gt;
+
+                    &lt;InputError messages={errors.email} className=&quot;mt-2&quot; /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;flex items-center justify-end mt-4&quot;&gt;
+                    &lt;Button&gt;Email Password Reset Link&lt;/Button&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+        &lt;/&gt;
+    )
+}
+
+export default Page
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803c-85f8-f18f322b6d79" class=""><code>(auth)/password-reset/[token]/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80f1-be94-cb764cf591e2" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/password-reset/[token]/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import type { ChangeEvent, FormEvent } from &#x27;react&#x27;
+import { useEffect, useState } from &#x27;react&#x27;
+import { useSearchParams } from &#x27;next/navigation&#x27;
+import AuthSessionStatus from &#x27;@/app/(auth)/AuthSessionStatus&#x27;
+import Button from &#x27;@/components/Button&#x27;
+import Input from &#x27;@/components/Input&#x27;
+import InputError from &#x27;@/components/InputError&#x27;
+import Label from &#x27;@/components/Label&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+import type { ValidationErrors } from &#x27;@/types&#x27;
+
+const PasswordReset = () =&gt; {
+    const searchParams = useSearchParams()
+
+    const { resetPassword } = useAuth({ middleware: &#x27;guest&#x27; })
+
+    const [email, setEmail] = useState(&#x27;&#x27;)
+    const [password, setPassword] = useState(&#x27;&#x27;)
+    const [passwordConfirmation, setPasswordConfirmation] = useState(&#x27;&#x27;)
+    const [errors, setErrors] = useState&lt;ValidationErrors&gt;({})
+    const [status, setStatus] = useState&lt;string | null&gt;(null)
+
+    const submitForm = (event: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+        event.preventDefault()
+
+        resetPassword({
+            email,
+            password,
+            password_confirmation: passwordConfirmation,
+            setErrors,
+            setStatus,
+        })
+    }
+
+    useEffect(() =&gt; {
+        setEmail(searchParams.get(&#x27;email&#x27;) ?? &#x27;&#x27;)
+    }, [searchParams])
+
+    return (
+        &lt;&gt;
+            &lt;AuthSessionStatus className=&quot;mb-4&quot; status={status} /&gt;
+
+            &lt;form onSubmit={submitForm}&gt;
+                &lt;div&gt;
+                    &lt;Label htmlFor=&quot;email&quot;&gt;Email&lt;/Label&gt;
+
+                    &lt;Input
+                        id=&quot;email&quot;
+                        type=&quot;email&quot;
+                        value={email}
+                        className=&quot;block mt-1 w-full&quot;
+                        onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                            setEmail(event.target.value)
+                        }
+                        required
+                        autoFocus
+                    /&gt;
+
+                    &lt;InputError messages={errors.email} className=&quot;mt-2&quot; /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;mt-4&quot;&gt;
+                    &lt;Label htmlFor=&quot;password&quot;&gt;Password&lt;/Label&gt;
+
+                    &lt;Input
+                        id=&quot;password&quot;
+                        type=&quot;password&quot;
+                        value={password}
+                        className=&quot;block mt-1 w-full&quot;
+                        onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                            setPassword(event.target.value)
+                        }
+                        required
+                    /&gt;
+
+                    &lt;InputError
+                        messages={errors.password}
+                        className=&quot;mt-2&quot;
+                    /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;mt-4&quot;&gt;
+                    &lt;Label htmlFor=&quot;passwordConfirmation&quot;&gt;
+                        Confirm Password
+                    &lt;/Label&gt;
+
+                    &lt;Input
+                        id=&quot;passwordConfirmation&quot;
+                        type=&quot;password&quot;
+                        value={passwordConfirmation}
+                        className=&quot;block mt-1 w-full&quot;
+                        onChange={(event: ChangeEvent&lt;HTMLInputElement&gt;) =&gt;
+                            setPasswordConfirmation(event.target.value)
+                        }
+                        required
+                    /&gt;
+
+                    &lt;InputError
+                        messages={errors.password_confirmation}
+                        className=&quot;mt-2&quot;
+                    /&gt;
+                &lt;/div&gt;
+
+                &lt;div className=&quot;flex items-center justify-end mt-4&quot;&gt;
+                    &lt;Button&gt;Reset Password&lt;/Button&gt;
+                &lt;/div&gt;
+            &lt;/form&gt;
+        &lt;/&gt;
+    )
+}
+
+export default PasswordReset
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80d6-9b87-def25d500431" class=""><code>(auth)/verify-email/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-805b-8015-cbf35092c243" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(auth)/verify-email/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import { useState } from &#x27;react&#x27;
+import Button from &#x27;@/components/Button&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+
+const Page = () =&gt; {
+    const { logout, resendEmailVerification } = useAuth({
+        middleware: &#x27;auth&#x27;,
+        redirectIfAuthenticated: &#x27;/dashboard&#x27;,
+    })
+
+    const [status, setStatus] = useState&lt;string | null&gt;(null)
+
+    return (
+        &lt;&gt;
+            &lt;div className=&quot;mb-4 text-sm text-gray-600&quot;&gt;
+                Thanks for signing up! Before getting started, could you verify
+                your email address by clicking on the link we just
+                emailed to you? If you didn&#x27;t receive the email, we will gladly
+                send you another.
+            &lt;/div&gt;
+
+            {status === &#x27;verification-link-sent&#x27; &amp;&amp; (
+                &lt;div className=&quot;mb-4 font-medium text-sm text-green-600&quot;&gt;
+                    A new verification link has been sent to the email address
+                    you provided during registration.
+                &lt;/div&gt;
+            )}
+
+            &lt;div className=&quot;mt-4 flex items-center justify-between&quot;&gt;
+                &lt;Button onClick={() =&gt; resendEmailVerification({ setStatus })}&gt;
+                    Resend Verification Email
+                &lt;/Button&gt;
+
+                &lt;button
+                    type=&quot;button&quot;
+                    className=&quot;underline text-sm text-gray-600 hover:text-gray-900&quot;
+                    onClick={logout}&gt;
+                    Logout
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/&gt;
+    )
+}
+
+export default Page
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8073-b31c-d055994031bf" class="">10. <code>(app)</code> 配下を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8083-b6c1-f2a021bf581b" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8039-a03f-eac55cf872fb" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv &#x27;src/app/(app)/Header.js&#x27; &#x27;src/app/(app)/Header.tsx&#x27;
+mv &#x27;src/app/(app)/Loading.js&#x27; &#x27;src/app/(app)/Loading.tsx&#x27;
+mv &#x27;src/app/(app)/dashboard/page.js&#x27; &#x27;src/app/(app)/dashboard/page.tsx&#x27;
+mv &#x27;src/app/(app)/Navigation.js&#x27; &#x27;src/app/(app)/Navigation.tsx&#x27;
+mv &#x27;src/app/(app)/layout.js&#x27; &#x27;src/app/(app)/layout.tsx&#x27;</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-801d-90f5-ef39d9cdf71b" class=""><code>Header.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8080-9059-cbaeafca1d07" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(app)/Header.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+type HeaderProps = {
+    title: string
+}
+
+const Header = ({ title }: HeaderProps) =&gt; {
+    return (
+        &lt;header className=&quot;bg-white shadow&quot;&gt;
+            &lt;div className=&quot;max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8&quot;&gt;
+                &lt;h2 className=&quot;font-semibold text-xl text-gray-800 leading-tight&quot;&gt;
+                    {title}
+                &lt;/h2&gt;
+            &lt;/div&gt;
+        &lt;/header&gt;
+    )
+}
+
+export default Header
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80e9-9859-e489e239f75b" class=""><code>Loading.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80e2-9504-d88733a807e6" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(app)/Loading.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+const Loading = () =&gt; {
+    return (
+        &lt;div className=&quot;flex min-h-screen w-full items-center justify-center bg-gray-100&quot;&gt;
+            Loading...
+        &lt;/div&gt;
+    )
+}
+
+export default Loading
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b1-9ba1-f7f28288514a" class=""><code>dashboard/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8023-9c84-c7557155a61b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(app)/dashboard/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+import type { Metadata } from &#x27;next&#x27;
+import Header from &#x27;@/app/(app)/Header&#x27;
+
+export const metadata: Metadata = {
+    title: &#x27;Laravel - Dashboard&#x27;,
+}
+
+const Dashboard = () =&gt; {
+    return (
+        &lt;&gt;
+            &lt;Header title=&quot;Dashboard&quot; /&gt;
+            &lt;div className=&quot;py-12&quot;&gt;
+                &lt;div className=&quot;max-w-7xl mx-auto sm:px-6 lg:px-8&quot;&gt;
+                    &lt;div className=&quot;bg-white overflow-hidden shadow-sm sm:rounded-lg&quot;&gt;
+                        &lt;div className=&quot;p-6 bg-white border-b border-gray-200&quot;&gt;
+                            You are logged in!
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/&gt;
+    )
+}
+
+export default Dashboard
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b4-a3d8-c862f4a38a69" class=""><code>Navigation.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8094-b45e-ea86c393336d" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(app)/Navigation.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import { useState } from &#x27;react&#x27;
+import type { User } from &#x27;@/types&#x27;
+import { usePathname } from &#x27;next/navigation&#x27;
+import Link from &#x27;next/link&#x27;
+import ApplicationLogo from &#x27;@/components/ApplicationLogo&#x27;
+import Dropdown from &#x27;@/components/Dropdown&#x27;
+import { DropdownButton } from &#x27;@/components/DropdownLink&#x27;
+import NavLink from &#x27;@/components/NavLink&#x27;
+import ResponsiveNavLink, {
+    ResponsiveNavButton,
+} from &#x27;@/components/ResponsiveNavLink&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+
+type NavigationProps = {
+    user?: User
+}
+
+const Navigation = ({ user }: NavigationProps) =&gt; {
+    const { logout } = useAuth()
+    const pathname = usePathname()
+    const [open, setOpen] = useState(false)
+
+    return (
+        &lt;nav className=&quot;bg-white border-b border-gray-100&quot;&gt;
+            &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8&quot;&gt;
+                &lt;div className=&quot;flex justify-between h-16&quot;&gt;
+                    &lt;div className=&quot;flex&quot;&gt;
+                        &lt;div className=&quot;flex-shrink-0 flex items-center&quot;&gt;
+                            &lt;Link href=&quot;/dashboard&quot;&gt;
+                                &lt;ApplicationLogo className=&quot;block h-10 w-auto fill-current text-gray-600&quot; /&gt;
+                            &lt;/Link&gt;
+                        &lt;/div&gt;
+
+                        &lt;div className=&quot;hidden space-x-8 sm:-my-px sm:ml-10 sm:flex&quot;&gt;
+                            &lt;NavLink
+                                href=&quot;/dashboard&quot;
+                                active={pathname === &#x27;/dashboard&#x27;}&gt;
+                                Dashboard
+                            &lt;/NavLink&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;div className=&quot;hidden sm:flex sm:items-center sm:ml-6&quot;&gt;
+                        &lt;Dropdown
+                            align=&quot;right&quot;
+                            width=&quot;48&quot;
+                            trigger={
+                                &lt;button className=&quot;flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out&quot;&gt;
+                                    &lt;div&gt;{user?.name}&lt;/div&gt;
+
+                                    &lt;div className=&quot;ml-1&quot;&gt;
+                                        &lt;svg
+                                            className=&quot;fill-current h-4 w-4&quot;
+                                            xmlns=&quot;http://www.w3.org/2000/svg&quot;
+                                            viewBox=&quot;0 0 20 20&quot;&gt;
+                                            &lt;path
+                                                fillRule=&quot;evenodd&quot;
+                                                d=&quot;M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z&quot;
+                                                clipRule=&quot;evenodd&quot;
+                                            /&gt;
+                                        &lt;/svg&gt;
+                                    &lt;/div&gt;
+                                &lt;/button&gt;
+                            }&gt;
+                            &lt;DropdownButton onClick={logout}&gt;
+                                Logout
+                            &lt;/DropdownButton&gt;
+                        &lt;/Dropdown&gt;
+                    &lt;/div&gt;
+
+                    &lt;div className=&quot;-mr-2 flex items-center sm:hidden&quot;&gt;
+                        &lt;button
+                            onClick={() =&gt; setOpen(open =&gt; !open)}
+                            className=&quot;inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out&quot;&gt;
+                            &lt;svg
+                                className=&quot;h-6 w-6&quot;
+                                stroke=&quot;currentColor&quot;
+                                fill=&quot;none&quot;
+                                viewBox=&quot;0 0 24 24&quot;&gt;
+                                {open ? (
+                                    &lt;path
+                                        className=&quot;inline-flex&quot;
+                                        strokeLinecap=&quot;round&quot;
+                                        strokeLinejoin=&quot;round&quot;
+                                        strokeWidth=&quot;2&quot;
+                                        d=&quot;M6 18L18 6M6 6l12 12&quot;
+                                    /&gt;
+                                ) : (
+                                    &lt;path
+                                        className=&quot;inline-flex&quot;
+                                        strokeLinecap=&quot;round&quot;
+                                        strokeLinejoin=&quot;round&quot;
+                                        strokeWidth=&quot;2&quot;
+                                        d=&quot;M4 6h16M4 12h16M4 18h16&quot;
+                                    /&gt;
+                                )}
+                            &lt;/svg&gt;
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            {open &amp;&amp; (
+                &lt;div className=&quot;block sm:hidden&quot;&gt;
+                    &lt;div className=&quot;pt-2 pb-3 space-y-1&quot;&gt;
+                        &lt;ResponsiveNavLink
+                            href=&quot;/dashboard&quot;
+                            active={pathname === &#x27;/dashboard&#x27;}&gt;
+                            Dashboard
+                        &lt;/ResponsiveNavLink&gt;
+                    &lt;/div&gt;
+
+                    &lt;div className=&quot;pt-4 pb-1 border-t border-gray-200&quot;&gt;
+                        &lt;div className=&quot;flex items-center px-4&quot;&gt;
+                            &lt;div className=&quot;flex-shrink-0&quot;&gt;
+                                &lt;svg
+                                    className=&quot;h-10 w-10 fill-current text-gray-400&quot;
+                                    xmlns=&quot;http://www.w3.org/2000/svg&quot;
+                                    fill=&quot;none&quot;
+                                    viewBox=&quot;0 0 24 24&quot;
+                                    stroke=&quot;currentColor&quot;&gt;
+                                    &lt;path
+                                        strokeLinecap=&quot;round&quot;
+                                        strokeLinejoin=&quot;round&quot;
+                                        strokeWidth=&quot;2&quot;
+                                        d=&quot;M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z&quot;
+                                    /&gt;
+                                &lt;/svg&gt;
+                            &lt;/div&gt;
+
+                            &lt;div className=&quot;ml-3&quot;&gt;
+                                &lt;div className=&quot;font-medium text-base text-gray-800&quot;&gt;
+                                    {user?.name}
+                                &lt;/div&gt;
+                                &lt;div className=&quot;font-medium text-sm text-gray-500&quot;&gt;
+                                    {user?.email}
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div className=&quot;mt-3 space-y-1&quot;&gt;
+                            &lt;ResponsiveNavButton onClick={logout}&gt;
+                                Logout
+                            &lt;/ResponsiveNavButton&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            )}
+        &lt;/nav&gt;
+    )
+}
+
+export default Navigation
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8007-a7fe-cdfe7c2b788c" class=""><code>(app)/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8084-a323-f7b3f190baa3" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+cat &gt; &#x27;src/app/(app)/layout.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
+&#x27;use client&#x27;
+
+import type { ReactNode } from &#x27;react&#x27;
+import { useAuth } from &#x27;@/hooks/auth&#x27;
+import Loading from &#x27;@/app/(app)/Loading&#x27;
+import Navigation from &#x27;@/app/(app)/Navigation&#x27;
+
+type AppLayoutProps = {
+    children?: ReactNode
+}
+
+const AppLayout = ({ children }: AppLayoutProps) =&gt; {
+    const { user } = useAuth({ middleware: &#x27;auth&#x27; })
+
+    if (!user) {
+        return &lt;Loading /&gt;
+    }
+
+    return (
+        &lt;div className=&quot;min-h-screen bg-gray-100&quot;&gt;
+            &lt;Navigation user={user} /&gt;
+            &lt;main&gt;{children}&lt;/main&gt;
+        &lt;/div&gt;
+    )
+}
+
+export default AppLayout
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-806f-8c5a-c69183827f68" class="">10. 最終確認</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8025-9a0a-fc86a81cd4cc" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+find src -type f \( -name &#x27;*.js&#x27; -o -name &#x27;*.jsx&#x27; -o -name &#x27;*.ts&#x27; -o -name &#x27;*.tsx&#x27; \) | sort
+npx tsc --noEmit
+npm run dev
+git status</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8052-a971-c575a0a79179" class="">11. コミット</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-802c-b71e-e941621d2737" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+git add -A
+git commit -m &quot;official breeze-next のTypeScript化を完了&quot;</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80ec-be27-d0a8e235395a" class="">補足</h2></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-805d-84bc-d032ac11906d" class="">この手順書は、元メモにあった</p></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8008-97c4-c02783ae70af" class="bulleted-list"><li style="list-style-type:disc"><code>mv</code> と <code>rm</code> の重複</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8022-aee6-fb5eee483e49" class="bulleted-list"><li style="list-style-type:disc"><code>src/app/page.js</code> / <code>src/app/layout.js</code> の抜け</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8090-95d1-f70e5200939a" class="bulleted-list"><li style="list-style-type:disc">途中の試行錯誤の混在</li></ul></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-8005-ada0-d28285cea5bf" class="">を整理して、最初から再実行できる順に並べ直した版。</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
