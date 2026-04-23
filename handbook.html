@@ -740,9 +740,9 @@ blockquote.quote-large {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="34b20694-c9f4-802d-b596-d6e63b909abc" class="page sans"><header><h1 class="page-title" dir="auto">official breeze-next を TypeScript 化する再実行手順書</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80ab-97c8-c503a33cf65e" class="">GitHub Repository URL: <a href="https://github.com/toshio-nakayama/breeze-next-typescript-starter">https://github.com/toshio-nakayama/breeze-next-typescript-starter</a></p></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80c4-8cb1-f837dccf2263" class="">対象ディレクトリ:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="34b20694-c9f4-8033-ba33-d122509b83cf" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">~/projects/demo/frontend</code></pre></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-8063-9918-eed8c682d8a9" class="">前提:</p></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8021-8aa0-c692057677bc" class="bulleted-list"><li style="list-style-type:disc">すでに official breeze-next を clone 済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-80da-826f-d82c70b8be52" class="bulleted-list"><li style="list-style-type:disc"><code>npm install</code> 済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8049-b2f7-c900e0599f7d" class="bulleted-list"><li style="list-style-type:disc"><code>npm run dev</code> が JS 版で動く状態</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8029-bc74-f6d303d3b612" class="bulleted-list"><li style="list-style-type:disc">作業ブランチで実施する</li></ul></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-808f-aa80-fa42402220ee" class="">0. 作業ブランチへ移動</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8002-ab5a-d9ddaf5b588b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
-git checkout feature/convert-breeze-next-to-typescript</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80ea-8d5e-e46259487d44" class="">1. TypeScript 依存を追加</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80fc-b1b4-ec9ac72b3871" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
-npm install -D typescript @types/node @types/react@18 @types/react-dom@18</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8030-8d43-e5628009d473" class="">2. <code>tsconfig.json</code> を作成</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-807d-974e-ff0a97797d2a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+</style></head><body><article id="34b20694-c9f4-802d-b596-d6e63b909abc" class="page sans"><header><h1 class="page-title" dir="auto">official breeze-next を TypeScript 化する再実行手順書</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="34b20694-c9f4-801a-ba39-db7176411a4e" class="">GitHub Repository URL:</p></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80e5-aaa2-f3326d8c2085" class=""><code>https://github.com/toshio-nakayama/breeze-next-typescript-starter</code></p></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-8059-8d1a-fba55d116709" class="">対象ディレクトリ:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" integrity="sha512-whYhDwtTmlC/NpZlCr6PSsAaLOrfjVg/iXAnC4H/dtiHawpShhT2SlIMbpIhT/IL/NrpdMm+Hq2C13+VKpHTYw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="34b20694-c9f4-8065-8e77-c2b69314a836" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">~/projects/demo/frontend</code></pre></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80b1-afb4-cd4b123e67c9" class="">前提:</p></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-802a-a829-ef64f83fc55f" class="bulleted-list"><li style="list-style-type:disc">すでに official breeze-next を clone 済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-80f6-8459-eca99b2c24f0" class="bulleted-list"><li style="list-style-type:disc"><code>npm install</code> 済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-805b-9e68-fd058d110ec5" class="bulleted-list"><li style="list-style-type:disc"><code>npm run dev</code> が JS 版で動く状態</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-80a4-b644-f9c7a9dec922" class="bulleted-list"><li style="list-style-type:disc">作業ブランチで実施する</li></ul></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80f1-8043-eeee3a5f9d41" class="">0. 作業ブランチへ移動</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8028-8b01-f05b7854b4cc" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+git checkout feature/convert-breeze-next-to-typescript</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80dd-9f56-f0fbb1cfa6c1" class="">1. TypeScript 依存を追加</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-801e-a965-e19c6503768a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+npm install -D typescript @types/node @types/react@18 @types/react-dom@18</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8064-a3b0-cc0f5dd39344" class="">2. <code>tsconfig.json</code> を作成</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80b4-b1bf-f9fc090cb51c" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; tsconfig.json &lt;&lt;&#x27;EOF&#x27;
 {
   &quot;compilerOptions&quot;: {
@@ -779,9 +779,9 @@ cat &gt; tsconfig.json &lt;&lt;&#x27;EOF&#x27;
   ],
   &quot;exclude&quot;: [&quot;node_modules&quot;]
 }
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80fe-81d1-dadc22ddb13f" class="">3. <code>.gitignore</code> に TypeScript ビルド情報を追加</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8065-9c5c-d1b3ecb19e3c" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
-printf &#x27;\n# TypeScript\n*.tsbuildinfo\n&#x27; &gt;&gt; .gitignore</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8043-9345-fb35a3822a64" class="">4. 型定義ディレクトリを作成</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c4-97d2-eb515397cb8a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
-mkdir -p src/types</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8003-b38f-d4ff292538c5" class="">5. 共通型ファイルを作成</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b6-8ea7-fc20b5412747" class=""><code>src/types/index.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80d9-81b2-e87817dbeca5" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-803b-bd85-f9b3a5c9a53f" class="">3. <code>.gitignore</code> に TypeScript ビルド情報を追加</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8022-b81c-e94e6fd3b2be" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+printf &#x27;\n# TypeScript\n*.tsbuildinfo\n&#x27; &gt;&gt; .gitignore</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80ec-95fb-e981ee3e63e2" class="">4. 型定義ディレクトリを作成</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-809f-9a48-f89ef74d2459" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mkdir -p src/types</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-806c-af65-f33e894d6d91" class="">5. 共通型ファイルを作成</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8036-8ac5-ed4598e37159" class=""><code>src/types/index.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80ce-b605-f590fae1ccf3" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/types/index.ts &lt;&lt;&#x27;EOF&#x27;
 export type User = {
     id: number
@@ -834,12 +834,12 @@ export type ResetPasswordParams = {
 export type ResendEmailVerificationParams = {
     setStatus: (status: string | null) =&gt; void
 }
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-805b-b9cb-f9d40fb0909c" class=""><code>src/types/global.d.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8082-8918-cf2d1f620dc7" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-800d-8423-d534501157f6" class=""><code>src/types/global.d.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8002-9c44-d1a8bce0b233" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/types/global.d.ts &lt;&lt;&#x27;EOF&#x27;
 declare module &#x27;*.css&#x27;
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-805b-a8b0-f19ae5c2e269" class="">6. <code>axios</code> と <code>auth</code> を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8061-8acf-f3870468f4ad" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-808c-a792-f3f6c8c202e4" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80db-92af-e4108ec297d7" class="">6. <code>axios</code> と <code>auth</code> を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8022-91b3-dc735d825348" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-806a-a3ca-f2f6461637ec" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 mv src/lib/axios.js src/lib/axios.ts
-mv src/hooks/auth.js src/hooks/auth.ts</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80e7-87fd-cc307a6dc397" class=""><code>src/lib/axios.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8062-b245-e47d98b4d317" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv src/hooks/auth.js src/hooks/auth.ts</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8060-a427-e7e5247be89c" class=""><code>src/lib/axios.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80ce-9b25-f5a2c1dce59f" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/lib/axios.ts &lt;&lt;&#x27;EOF&#x27;
 import Axios from &#x27;axios&#x27;
 
@@ -852,7 +852,7 @@ const axios = Axios.create({
 })
 
 export default axios
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-802f-b835-fcb2e4d856ff" class=""><code>src/hooks/auth.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8038-892d-f1f534cd7e09" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80f7-b9b6-c075e81d0b6d" class=""><code>src/hooks/auth.ts</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-800d-afe5-f2d02ebce499" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/hooks/auth.ts &lt;&lt;&#x27;EOF&#x27;
 import useSWR from &#x27;swr&#x27;
 import axios from &#x27;@/lib/axios&#x27;
@@ -1008,11 +1008,11 @@ export const useAuth = ({
         logout,
     }
 }
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-809e-ac2b-c6dbfb3514d2" class="">7. <code>src/app</code> ルートを TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ab-b715-c317ea13c704" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8066-bfd8-f70e43438fad" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80b0-9155-cc0e4bcd0e3a" class="">7. <code>src/app</code> ルートを TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8062-9cb0-f64c43eef1f8" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-807e-a344-e85499653b05" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 mv src/app/layout.js src/app/layout.tsx
 mv src/app/page.js src/app/page.tsx
 mv src/app/not-found.js src/app/not-found.tsx
-mv src/app/LoginLinks.js src/app/LoginLinks.tsx</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8082-827a-ceacf41fc06d" class=""><code>src/app/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8073-840a-f55aebf46690" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv src/app/LoginLinks.js src/app/LoginLinks.tsx</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8040-a0a2-d5b7795377d6" class=""><code>src/app/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8019-b1d2-f4c9f804abdb" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/app/layout.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { Metadata } from &#x27;next&#x27;
 import type { ReactNode } from &#x27;react&#x27;
@@ -1041,7 +1041,7 @@ const RootLayout = ({ children }: RootLayoutProps) =&gt; {
 }
 
 export default RootLayout
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80c4-8774-d1b9325a7d11" class=""><code>src/app/page.tsx</code> の先頭置換</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8022-98b4-fc2b4258d51a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80c3-90b2-ef39c20cfe97" class=""><code>src/app/page.tsx</code> の先頭置換</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8068-bfe5-ff02a8605b4d" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 python3 - &lt;&lt;&#x27;PY&#x27;
 from pathlib import Path
 
@@ -1067,7 +1067,7 @@ if old not in text:
     raise SystemExit(&quot;置換対象が見つからなかった&quot;)
 path.write_text(text.replace(old, new, 1))
 print(&quot;updated:&quot;, path)
-PY</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80af-8f8d-fcd5d3eb773a" class=""><code>src/app/not-found.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c9-b625-fe04e7d78d22" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+PY</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80f6-a8fb-f6ebb38a442b" class=""><code>src/app/not-found.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80ef-b5dc-ef0e7cb0a327" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/app/not-found.tsx &lt;&lt;&#x27;EOF&#x27;
 const NotFoundPage = () =&gt; {
     return (
@@ -1088,7 +1088,7 @@ const NotFoundPage = () =&gt; {
 }
 
 export default NotFoundPage
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ff-b4c2-e2e10b88af51" class=""><code>src/app/LoginLinks.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-801d-87ee-c127f469bc10" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-807e-9795-e4120dde62d2" class=""><code>src/app/LoginLinks.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80fb-9e27-f0569167251b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/app/LoginLinks.tsx &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -1129,7 +1129,7 @@ const LoginLinks = () =&gt; {
 }
 
 export default LoginLinks
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8068-82f2-eb365ce04bd9" class="">8. <code>src/components</code> を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80e3-9bc0-cba98109db4b" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80f8-b92f-f41be915dac0" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8078-951c-dfe9ae847ad7" class="">8. <code>src/components</code> を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-800e-ae10-dbaa6aee88cd" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8024-a8a9-ca76fcf0425e" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 mv src/components/ApplicationLogo.js src/components/ApplicationLogo.tsx
 mv src/components/Button.js src/components/Button.tsx
 mv src/components/Input.js src/components/Input.tsx
@@ -1138,7 +1138,7 @@ mv src/components/InputError.js src/components/InputError.tsx
 mv src/components/Dropdown.js src/components/Dropdown.tsx
 mv src/components/DropdownLink.js src/components/DropdownLink.tsx
 mv src/components/NavLink.js src/components/NavLink.tsx
-mv src/components/ResponsiveNavLink.js src/components/ResponsiveNavLink.tsx</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803a-b431-fe61f7c98703" class=""><code>ApplicationLogo.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-805b-a2a8-e0d34244995b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv src/components/ResponsiveNavLink.js src/components/ResponsiveNavLink.tsx</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80af-9634-d6b197751004" class=""><code>ApplicationLogo.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80e6-a5e6-f115ead96c8a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/ApplicationLogo.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { SVGProps } from &#x27;react&#x27;
 
@@ -1149,7 +1149,7 @@ const ApplicationLogo = (props: SVGProps&lt;SVGSVGElement&gt;) =&gt; (
 )
 
 export default ApplicationLogo
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b3-be6c-e83c025067e2" class=""><code>Button.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c8-8176-dacef4bd801d" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80d8-9e3f-ecd93289ea72" class=""><code>Button.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8002-98f6-cf7a25d50e72" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/Button.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { ButtonHTMLAttributes } from &#x27;react&#x27;
 
@@ -1164,7 +1164,7 @@ const Button = ({ type = &#x27;submit&#x27;, className = &#x27;&#x27;, ...props 
 )
 
 export default Button
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8083-bce3-c5e43ceee9b5" class=""><code>Input.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8025-a2a2-fbc15c268397" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8012-81fa-d7b87b9a3000" class=""><code>Input.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8053-acbd-fdf39d84f962" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/Input.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { InputHTMLAttributes } from &#x27;react&#x27;
 
@@ -1179,7 +1179,7 @@ const Input = ({ disabled = false, className = &#x27;&#x27;, ...props }: InputPr
 )
 
 export default Input
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8077-9934-c55464caa603" class=""><code>Label.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8028-bf53-c46572b0ca10" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80a2-9443-f461b66c2661" class=""><code>Label.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80a4-8f10-fcc098045b60" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/Label.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { LabelHTMLAttributes, ReactNode } from &#x27;react&#x27;
 
@@ -1196,7 +1196,7 @@ const Label = ({ className = &#x27;&#x27;, children, ...props }: LabelProps) =&g
 )
 
 export default Label
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8097-ae9c-ed54a88be332" class=""><code>InputError.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80a7-bfff-f2271cd5db51" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80c7-a09f-de864e928908" class=""><code>InputError.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8064-a58d-cb8d4b217c17" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/InputError.tsx &lt;&lt;&#x27;EOF&#x27;
 type InputErrorProps = {
     messages?: string[]
@@ -1220,7 +1220,7 @@ const InputError = ({ messages = [], className = &#x27;&#x27; }: InputErrorProps
 )
 
 export default InputError
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80fc-812e-c8a3896e402a" class=""><code>Dropdown.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-800a-9866-f917e40ebb2a" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8083-a537-ef4bbe757331" class=""><code>Dropdown.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80bb-9a62-ffc376cfeddd" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/Dropdown.tsx &lt;&lt;&#x27;EOF&#x27;
 import React from &#x27;react&#x27;
 import type { ReactNode } from &#x27;react&#x27;
@@ -1296,7 +1296,7 @@ const Dropdown = ({
 }
 
 export default Dropdown
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8004-837d-c8d4b1065017" class=""><code>DropdownLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8013-bb3e-c478c49e2e8b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ed-9afe-cfc163f407ee" class=""><code>DropdownLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80ee-a1f2-cda392a56483" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/DropdownLink.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { ButtonHTMLAttributes, ReactNode } from &#x27;react&#x27;
 import Link from &#x27;next/link&#x27;
@@ -1345,7 +1345,7 @@ export const DropdownButton = ({
 )
 
 export default DropdownLink
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8099-8b7f-eaf1519efe4c" class=""><code>NavLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c7-9b54-f2d008389c7b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80d6-9d13-c4da6adfa397" class=""><code>NavLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c9-a351-ddf51d736325" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/NavLink.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { ReactNode } from &#x27;react&#x27;
 import Link from &#x27;next/link&#x27;
@@ -1375,7 +1375,7 @@ const NavLink = ({
 )
 
 export default NavLink
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ec-9d3f-f28ee0910387" class=""><code>ResponsiveNavLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8080-825e-e8c5eaca27d6" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8023-a4ec-e27108886524" class=""><code>ResponsiveNavLink.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8015-9dcf-e5ba96031960" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; src/components/ResponsiveNavLink.tsx &lt;&lt;&#x27;EOF&#x27;
 import type { ButtonHTMLAttributes, ReactNode } from &#x27;react&#x27;
 import Link from &#x27;next/link&#x27;
@@ -1419,7 +1419,7 @@ export const ResponsiveNavButton = ({
 )
 
 export default ResponsiveNavLink
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8032-828e-ea5e92ff095f" class="">9. <code>(auth)</code> 配下を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80aa-b90c-f648a2bbd519" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8061-a927-f9e8fe08d8e3" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8037-a910-d3d61589b171" class="">9. <code>(auth)</code> 配下を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-809d-bd66-df136bc58b7c" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-809b-924c-dd34a7901361" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 mv &#x27;src/app/(auth)/AuthCard.js&#x27; &#x27;src/app/(auth)/AuthCard.tsx&#x27;
 mv &#x27;src/app/(auth)/AuthSessionStatus.js&#x27; &#x27;src/app/(auth)/AuthSessionStatus.tsx&#x27;
 mv &#x27;src/app/(auth)/layout.js&#x27; &#x27;src/app/(auth)/layout.tsx&#x27;
@@ -1427,7 +1427,7 @@ mv &#x27;src/app/(auth)/login/page.js&#x27; &#x27;src/app/(auth)/login/page.tsx&
 mv &#x27;src/app/(auth)/register/page.js&#x27; &#x27;src/app/(auth)/register/page.tsx&#x27;
 mv &#x27;src/app/(auth)/forgot-password/page.js&#x27; &#x27;src/app/(auth)/forgot-password/page.tsx&#x27;
 mv &#x27;src/app/(auth)/password-reset/[token]/page.js&#x27; &#x27;src/app/(auth)/password-reset/[token]/page.tsx&#x27;
-mv &#x27;src/app/(auth)/verify-email/page.js&#x27; &#x27;src/app/(auth)/verify-email/page.tsx&#x27;</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803d-85cb-c5ff2a4693f3" class=""><code>AuthCard.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8070-a349-e5f923383183" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv &#x27;src/app/(auth)/verify-email/page.js&#x27; &#x27;src/app/(auth)/verify-email/page.tsx&#x27;</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-809d-8831-f41893a5cb3f" class=""><code>AuthCard.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8040-af90-eaafd7a826c5" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/AuthCard.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 import type { ReactNode } from &#x27;react&#x27;
 
@@ -1447,7 +1447,7 @@ const AuthCard = ({ logo, children }: AuthCardProps) =&gt; (
 )
 
 export default AuthCard
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8065-97c3-eb3d6db153bf" class=""><code>AuthSessionStatus.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8081-9b83-e5bff1af7ba8" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-801a-9349-c605d1540b6f" class=""><code>AuthSessionStatus.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8079-8ef4-c47f3fb2a9b1" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/AuthSessionStatus.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 import type { HTMLAttributes } from &#x27;react&#x27;
 
@@ -1473,7 +1473,7 @@ const AuthSessionStatus = ({
 )
 
 export default AuthSessionStatus
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8051-a262-f022e2483a68" class=""><code>(auth)/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80a1-a71e-cc0dc0e3bf29" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b8-a070-d6223262511a" class=""><code>(auth)/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80f1-a5bf-eb5577314e3f" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/layout.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 import type { Metadata } from &#x27;next&#x27;
 import type { ReactNode } from &#x27;react&#x27;
@@ -1507,7 +1507,7 @@ const Layout = ({ children }: AuthLayoutProps) =&gt; {
 }
 
 export default Layout
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8092-ad73-f070abb4b8ed" class=""><code>(auth)/login/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-802c-9260-c33fffbb55c4" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8091-ab3e-f71cc297cf7b" class=""><code>(auth)/login/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8089-b44d-f33de0ea5071" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/login/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -1638,7 +1638,7 @@ const Login = () =&gt; {
 }
 
 export default Login
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80bd-8728-f97a4d07f9a2" class=""><code>(auth)/register/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8031-851c-dafd0d37d9ff" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-805b-b592-c85d9b9f103c" class=""><code>(auth)/register/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-801f-8577-c48c2d71e315" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/register/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -1767,7 +1767,7 @@ const Page = () =&gt; {
 }
 
 export default Page
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b5-bcce-ca977dcac5f3" class=""><code>(auth)/forgot-password/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8042-8d28-f4bb726d8f87" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8028-8ad4-f697acc639d7" class=""><code>(auth)/forgot-password/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-800f-a3a6-c17595eea5bf" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/forgot-password/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -1836,7 +1836,7 @@ const Page = () =&gt; {
 }
 
 export default Page
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803c-85f8-f18f322b6d79" class=""><code>(auth)/password-reset/[token]/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80f1-be94-cb764cf591e2" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-803d-b30c-cc26cfb3a1ed" class=""><code>(auth)/password-reset/[token]/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80c8-9224-eca5df9bdd25" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/password-reset/[token]/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -1952,7 +1952,7 @@ const PasswordReset = () =&gt; {
 }
 
 export default PasswordReset
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80d6-9b87-def25d500431" class=""><code>(auth)/verify-email/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-805b-8015-cbf35092c243" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8058-976a-c4055620bacb" class=""><code>(auth)/verify-email/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-802b-8261-d7bca984ad4b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(auth)/verify-email/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -2001,12 +2001,12 @@ const Page = () =&gt; {
 }
 
 export default Page
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8073-b31c-d055994031bf" class="">10. <code>(app)</code> 配下を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8083-b6c1-f2a021bf581b" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8039-a03f-eac55cf872fb" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-801b-843c-fb39998078aa" class="">10. <code>(app)</code> 配下を TypeScript 化</h2></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80c4-9301-ecfaf20c31d4" class="">リネーム</h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8018-85d5-ed83a738cddd" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 mv &#x27;src/app/(app)/Header.js&#x27; &#x27;src/app/(app)/Header.tsx&#x27;
 mv &#x27;src/app/(app)/Loading.js&#x27; &#x27;src/app/(app)/Loading.tsx&#x27;
 mv &#x27;src/app/(app)/dashboard/page.js&#x27; &#x27;src/app/(app)/dashboard/page.tsx&#x27;
 mv &#x27;src/app/(app)/Navigation.js&#x27; &#x27;src/app/(app)/Navigation.tsx&#x27;
-mv &#x27;src/app/(app)/layout.js&#x27; &#x27;src/app/(app)/layout.tsx&#x27;</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-801d-90f5-ef39d9cdf71b" class=""><code>Header.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8080-9059-cbaeafca1d07" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+mv &#x27;src/app/(app)/layout.js&#x27; &#x27;src/app/(app)/layout.tsx&#x27;</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80d6-bfe0-e3dc2662612b" class=""><code>Header.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8009-9cd0-d5a16e4f6ba8" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(app)/Header.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 type HeaderProps = {
     title: string
@@ -2025,7 +2025,7 @@ const Header = ({ title }: HeaderProps) =&gt; {
 }
 
 export default Header
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80e9-9859-e489e239f75b" class=""><code>Loading.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80e2-9504-d88733a807e6" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80bb-ac29-d444611512e9" class=""><code>Loading.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-804c-abb5-f505b62bcd67" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(app)/Loading.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 const Loading = () =&gt; {
     return (
@@ -2036,7 +2036,7 @@ const Loading = () =&gt; {
 }
 
 export default Loading
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b1-9ba1-f7f28288514a" class=""><code>dashboard/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8023-9c84-c7557155a61b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8064-84e6-fee1270df3c4" class=""><code>dashboard/page.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80ba-9dac-ef8d9ec775d7" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(app)/dashboard/page.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 import type { Metadata } from &#x27;next&#x27;
 import Header from &#x27;@/app/(app)/Header&#x27;
@@ -2063,7 +2063,7 @@ const Dashboard = () =&gt; {
 }
 
 export default Dashboard
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80b4-a3d8-c862f4a38a69" class=""><code>Navigation.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8094-b45e-ea86c393336d" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ff-8bbd-e265cbf1f591" class=""><code>Navigation.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-804c-901f-cb7d8a031723" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(app)/Navigation.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -2220,7 +2220,7 @@ const Navigation = ({ user }: NavigationProps) =&gt; {
 }
 
 export default Navigation
-EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-8007-a7fe-cdfe7c2b788c" class=""><code>(app)/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8084-a323-f7b3f190baa3" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h3 id="34b20694-c9f4-80ab-9342-d0aa16da43c6" class=""><code>(app)/layout.tsx</code></h3></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80f0-b4c4-fec23bf41f79" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 cat &gt; &#x27;src/app/(app)/layout.tsx&#x27; &lt;&lt;&#x27;EOF&#x27;
 &#x27;use client&#x27;
 
@@ -2249,10 +2249,11 @@ const AppLayout = ({ children }: AppLayoutProps) =&gt; {
 }
 
 export default AppLayout
-EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-806f-8c5a-c69183827f68" class="">10. 最終確認</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-8025-9a0a-fc86a81cd4cc" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+EOF</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8003-9209-ee387186a928" class="">11. <code>jsconfig.json</code> を削除</h2></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-809e-8f87-f87014bac4ac" class=""><code>tsconfig.json</code> へ統一したので、不要になった <code>jsconfig.json</code> を削除する。</p></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-80bd-b7ec-c14422e684ae" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+rm jsconfig.json</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8066-821b-e323854b163c" class="">12. 最終確認</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-803c-9f3a-ca0ad43971e0" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 find src -type f \( -name &#x27;*.js&#x27; -o -name &#x27;*.jsx&#x27; -o -name &#x27;*.ts&#x27; -o -name &#x27;*.tsx&#x27; \) | sort
 npx tsc --noEmit
 npm run dev
-git status</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8052-a971-c575a0a79179" class="">11. コミット</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-802c-b71e-e941621d2737" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
+git status</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-8029-b3d6-c3c619de1904" class="">13. コミット</h2></div><div style="display:contents" dir="auto"><pre id="34b20694-c9f4-806c-8de4-d283d2caa14b" class="code code-wrap"><code class="language-bash" style="white-space:pre-wrap;word-break:break-all">cd ~/projects/demo/frontend
 git add -A
-git commit -m &quot;official breeze-next のTypeScript化を完了&quot;</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80ec-be27-d0a8e235395a" class="">補足</h2></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-805d-84bc-d032ac11906d" class="">この手順書は、元メモにあった</p></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8008-97c4-c02783ae70af" class="bulleted-list"><li style="list-style-type:disc"><code>mv</code> と <code>rm</code> の重複</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8022-aee6-fb5eee483e49" class="bulleted-list"><li style="list-style-type:disc"><code>src/app/page.js</code> / <code>src/app/layout.js</code> の抜け</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8090-95d1-f70e5200939a" class="bulleted-list"><li style="list-style-type:disc">途中の試行錯誤の混在</li></ul></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-8005-ada0-d28285cea5bf" class="">を整理して、最初から再実行できる順に並べ直した版。</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+git commit -m &quot;official breeze-next のTypeScript化を完了&quot;</code></pre></div><div style="display:contents" dir="auto"><h2 id="34b20694-c9f4-80b8-9d38-f5cb32f92c93" class="">補足</h2></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-803d-9a83-d8ae4e5ce4a7" class="">この完全版では、もともとの整理済み手順に加えて、最後に <strong>不要になった </strong><code><strong>jsconfig.json</strong></code><strong> の削除</strong> まで含めている。</p></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-80ed-a305-dc40b690c697" class="">つまり、最終状態は</p></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-80ec-be5f-d490abb5cb58" class="bulleted-list"><li style="list-style-type:disc"><code>tsconfig.json</code> に統一</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-80a5-9742-e6b15675231c" class="bulleted-list"><li style="list-style-type:disc"><code>jsconfig.json</code> は削除</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-801a-a50c-fa8ca8373018" class="bulleted-list"><li style="list-style-type:disc"><code>src</code> 配下は <code>.ts/.tsx</code> 化済み</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-8014-af3a-c9839300c40d" class="bulleted-list"><li style="list-style-type:disc"><code>npx tsc --noEmit</code> 通過</li></ul></div><div style="display:contents" dir="auto"><ul id="34b20694-c9f4-805f-9665-e04dfd9894e2" class="bulleted-list"><li style="list-style-type:disc"><code>npm run dev</code> 通過</li></ul></div><div style="display:contents" dir="auto"><p id="34b20694-c9f4-805f-a5bc-fb1b71651df5" class="">の状態まで持っていく版。</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
